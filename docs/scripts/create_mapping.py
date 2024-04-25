@@ -6,6 +6,7 @@ import json
 import logging
 from lxml import etree
 from pathlib import Path
+import lxml.etree
 
 REPOSITORIES = [
     'openvino',
@@ -37,7 +38,7 @@ def create_mapping(xml_input: Path, output_dir: Path, strip_path: Path):
     xml_files = xml_input.glob('*.xml')
     for xml_file in xml_files:
         try:
-            root = etree.parse(xml_file.as_posix()).getroot()
+            root = etree.parse(xml_file.as_posix(), parser=lxml.etree.XMLParser(resolve_entities=False)).getroot()
             compounds = root.xpath('//compounddef')
             for compound in compounds:
                 kind = compound.attrib['kind']
