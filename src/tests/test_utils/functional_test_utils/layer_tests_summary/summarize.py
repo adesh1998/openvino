@@ -317,7 +317,7 @@ def create_summary(summary_root: Element, output_folder: os.path, expected_devic
 
     script_dir, _ = os.path.split(os.path.abspath(__file__))
     file_loader = FileSystemLoader(os.path.join(script_dir, 'template'))
-    env = Environment(loader=file_loader)
+    env = Environment(loader=file_loader, autoescape=True)
     template = env.get_template('report_template.html')
 
     res_summary = template.render(ordered_ops=op_list, devices=device_list, results=results, timestamp=timestamp,
@@ -390,7 +390,7 @@ def create_api_summary(xml_paths: list, output_folder: str, expected_devices:lis
         logger.info("File with report creating is started")
         script_dir = Path(__file__).parent.absolute()
         file_loader = FileSystemLoader(script_dir.joinpath('template').as_posix())
-        env = Environment(loader=file_loader)
+        env = Environment(loader=file_loader, autoescape=True)
         template = env.get_template('report_api_template.html')
 
         res_summary = template.render(devices=api_devices,
