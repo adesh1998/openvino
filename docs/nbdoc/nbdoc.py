@@ -59,7 +59,7 @@ class NbTravisDownloader:
             :type link: str
             """
             path.mkdir(exist_ok=True)
-            page = get(link, verify=False).content
+            page = get(link, verify=True).content
             tree = html.fromstring(page)
             # retrieve all links on page returning their content
             tree = tree.xpath('//a[@*]/@href')
