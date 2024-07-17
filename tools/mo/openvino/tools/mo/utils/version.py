@@ -67,7 +67,7 @@ def get_version():
     if not os.path.isfile(version_txt):
         return generate_mo_version()
     with open(version_txt) as f:
-        return f.readline().replace('\n', '')
+        return f.readline(5_000_000).replace('\n', '')
 
 
 def get_simplified_mo_version():

@@ -431,7 +431,7 @@ def default_tree(args):
     if os.path.isdir(args.input):
         for filename in glob(os.path.join(args.input, '*.mdl')):
             with open(filename, 'r') as file:
-                parts = file.readline().split()
+                parts = file.readline(5_000_000).split()
                 tree["modules"][int(os.path.basename(filename).replace(".mdl", ""))] = [' '.join(parts[0:-1]), parts[-1]]
     return tree
 
@@ -469,11 +469,11 @@ def sea_reader(args):  # reads the structure of .sea format folder into dictiona
     for filename in toplevel[2]:
         with open("/".join([folder, filename]), "r") as file:
             if filename.endswith(".str"):  # each string_handle_create writes separate file, name is the handle, content is the value
-                tree["strings"][int(filename.replace(".str", ""))] = file.readline()
+                tree["strings"][int(filename.replace(".str", ""))] = file.readline(5_000_000)
             elif filename.endswith(".tid"):  # named thread makes record: name is the handle and content is the value
-                tree["threads"][filename.replace(".tid", "")] = file.readline()
+                tree["threads"][filename.replace(".tid", "")] = file.readline(5_000_000)
             elif filename.endswith(".pid"):  # named groups (pseudo pids) makes record: group is the handle and content is the value
-                tree["groups"][filename.replace(".pid", "")] = file.readline()
+                tree["groups"][filename.replace(".pid", "")] = file.readline(5_000_000)
     for domain in toplevel[1]:  # data from every domain gets recorded into separate folder which is named after the domain name
         tree["domains"][domain] = {"files": []}
         for file in next(os.walk("/".join([folder, domain])))[2]:  # each thread of this domain has separate file with data
