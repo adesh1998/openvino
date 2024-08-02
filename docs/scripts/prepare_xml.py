@@ -7,6 +7,7 @@ import argparse
 from lxml import etree
 from pathlib import Path
 from xml.sax import saxutils
+import lxml.etree
 
 
 def prepare_xml(xml_dir: Path):
@@ -28,7 +29,7 @@ def prepare_xml(xml_dir: Path):
             # escape asterisks
             contents = contents.replace('*', '\\*')
             contents = str.encode(contents)
-            root = etree.fromstring(contents)
+            root = etree.fromstring(contents, parser=lxml.etree.XMLParser(resolve_entities=False))
 
             # unescape * in sphinxdirectives
             sphinxdirectives = root.xpath('//sphinxdirective')
