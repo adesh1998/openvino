@@ -34,7 +34,7 @@ def parse_layout(content):
     """
     Parse DoxygenLayout.xml
     """
-    parser = etree.XMLParser(encoding='utf-8')
+    parser = etree.XMLParser(encoding='utf-8', resolve_entities=False)
     root = etree.fromstring(content, parser=parser)
     format_input(root)
     files = defaultdict(lambda: set())
