@@ -293,7 +293,7 @@ class HighlightTableCreator():
 
         script_dir = Path(__file__).parent.absolute()
         file_loader = FileSystemLoader(script_dir.joinpath('template').as_posix())
-        env = Environment(loader=file_loader)
+        env = Environment(loader=file_loader, autoescape=True)
         template = env.get_template('highlight_tables_template.html')
 
         res_summary = template.render(devices=self.devices,
