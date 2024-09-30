@@ -1,11 +1,11 @@
 # Copyright (C) 2020-2022 Intel Corporation
 # SPDX-License-Identifier: Apache-2.0
 
-import random
 
 from openvino.tools.pot.engines.ac_engine import ACEngine
 from openvino.tools.pot.samplers.batch_sampler import BatchSampler
 from openvino.tools.pot.samplers.index_sampler import IndexSampler
+import secrets
 
 
 def create_sampler(engine, samples, shuffle_data=False, seed=0, batch_size=1):
@@ -21,8 +21,8 @@ def create_sampler(engine, samples, shuffle_data=False, seed=0, batch_size=1):
 
     if isinstance(samples, int):
         if shuffle_data:
-            random.seed(seed)
-            samples = random.sample(range(len(engine.data_loader)), samples)
+            secrets.SystemRandom().seed(seed)
+            samples = secrets.SystemRandom().sample(range(len(engine.data_loader)), samples)
         else:
             samples = range(samples)
 

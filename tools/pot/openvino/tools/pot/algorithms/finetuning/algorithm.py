@@ -1,7 +1,6 @@
 # Copyright (C) 2020-2022 Intel Corporation
 # SPDX-License-Identifier: Apache-2.0
 
-import random
 from copy import deepcopy
 import numpy as np
 import torch
@@ -16,6 +15,7 @@ from ...samplers.batch_sampler import BatchSampler
 from ...statistics.collector import collect_statistics
 from ...statistics.statistics import TensorStatistic
 from ...utils.logger import get_logger
+import secrets
 
 logger = get_logger(__name__)
 
@@ -89,8 +89,7 @@ class LayerwiseModelFinetuning(Algorithm):
 
         if (self._tconf['calibration_indices_pool'] is not None
                 and self._tconf['calibration_indices_pool'] < self._optimization_dataset_size):
-            self._samples_indices_pool = random.sample(
-                range(self._optimization_dataset_size), self._tconf['calibration_indices_pool'])
+            self._samples_indices_pool = secrets.SystemRandom().sample(range(self._optimization_dataset_size), self._tconf['calibration_indices_pool'])
 
     def run(self, model):
         raise NotImplementedError
@@ -178,7 +177,7 @@ class LayerwiseModelFinetuning(Algorithm):
             return -1
 
     def _random_samples(self):
-        batch_indices_sample = random.sample(self._samples_indices_pool, self._tconf['batch_size'])
+        batch_indices_sample = secrets.SystemRandom().sample(self._samples_indices_pool, self._tconf['batch_size'])
         if self._is_simplified_evaluation:
             batch_indices_sample = BatchSampler(batch_indices_sample)
         return batch_indices_sample
@@ -290,7 +289,7 @@ class LayerwiseModelFinetuning(Algorithm):
         stats_layout = {output_node_name: {'output_logits': TensorStatistic(lambda logits: logits)}}
         metric_subset_size = int(self._dataset_size * self._metric_subset_ratio)
         diff_subset_indices = (
-            sorted(random.sample(range(self._dataset_size), metric_subset_size))
+            sorted(secrets.SystemRandom().sample(range(self._dataset_size), metric_subset_size))
             if metric_subset_size < self._dataset_size
             else list(range(self._dataset_size))
         )
@@ -362,7 +361,7 @@ class LayerwiseModelFinetuning(Algorithm):
     @staticmethod
     def set_seed(seed, device):
         np.random.seed(seed)
-        random.seed(seed)
+        secrets.SystemRandom().seed(seed)
         torch.manual_seed(seed)
         if device != 'cpu':
             import torch.backends.cudnn as cudnn
