@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: Apache-2.0
 
 import os
-import random
 from copy import deepcopy
 from sys import maxsize
 
@@ -21,6 +20,7 @@ from ....samplers.creator import create_sampler
 from ....statistics.statistics import TensorStatistic
 from ....utils.logger import get_logger
 from ....utils.telemetry import send_event
+import secrets
 
 logger = get_logger(__name__)
 
@@ -80,7 +80,7 @@ class AccuracyAwareCommon(Algorithm):
 
         self._dataset_size = len(self._engine.data_loader)
         metric_subset_size = int(self._dataset_size * self._config.metric_subset_ratio)
-        self._diff_subset_indices = sorted(random.sample(range(self._dataset_size), metric_subset_size)) \
+        self._diff_subset_indices = sorted(secrets.SystemRandom().sample(range(self._dataset_size), metric_subset_size)) \
             if metric_subset_size < self._dataset_size and self._baseline_metric \
             else list(range(self._dataset_size))
         self._graph_transformer = GraphTransformer(load_hardware_config(self._config))
