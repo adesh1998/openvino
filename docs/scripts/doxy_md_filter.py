@@ -138,7 +138,7 @@ def get_label(file):
     :return: A doxygen label
     """
     with open(file, 'r', encoding='utf-8') as f:
-        line = f.readline()
+        line = f.readline(5_000_000)
         label = re.search(LABEL_PATTERN, line)
         if label:
             return label.group(1)
